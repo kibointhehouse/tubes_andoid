@@ -1,6 +1,8 @@
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_android/model/login_model.dart';
 import 'package:tubes_android/services/api_services.dart';
 import 'package:tubes_android/services/auth_manager.dart';
+import 'package:tubes_android/view/screen/botnav.dart';
 import 'package:tubes_android/view/screen/home_page.dart';
 import 'package:flutter/material.dart';
 
@@ -15,6 +17,9 @@ class _LoginPageState extends State<LoginPage> {
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
 
+//variabel
+  late SharedPreferences loginData;
+  late bool newUser;
   final ApiServices _dataService = ApiServices();
 
   @override
@@ -29,7 +34,7 @@ class _LoginPageState extends State<LoginPage> {
       Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(
-          builder: (context) => HomePage(),
+          builder: (context) => const DynamicBottomNavBar(),
         ),
         (route) => false,
       );
@@ -92,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                   const SizedBox(height: 10),
                   const Text(
-                    'Welcome back!',
+                    'Manajemen Menu Restoran',
                     style: TextStyle(
                       fontSize: 16,
                       color: Colors.grey,
@@ -160,7 +165,7 @@ class _LoginPageState extends State<LoginPage> {
                           Navigator.pushAndRemoveUntil(
                             context,
                             MaterialPageRoute(
-                              builder: (context) => HomePage(),
+                              builder: (context) => const DynamicBottomNavBar(),
                             ),
                             (route) => false,
                           );

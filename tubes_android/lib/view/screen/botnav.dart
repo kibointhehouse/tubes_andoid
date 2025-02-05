@@ -1,27 +1,28 @@
+import 'package:tubes_android/view/screen/about_page.dart';
 import 'package:tubes_android/view/screen/home_page.dart';
 import 'package:flutter/material.dart';
 import 'profile.dart'; // Tambahkan file untuk halaman kedua
 
-class BottomNavbar extends StatefulWidget {
-  // const DynamicBottomNavBar({super.key});
+class DynamicBottomNavBar extends StatefulWidget {
+  const DynamicBottomNavBar({super.key});
 
   @override
-  _BottomNavbarState createState() => _BottomNavbarState();
+  _BottomNavBar createState() => _BottomNavBar();
 }
 
-class _BottomNavbarState extends State<BottomNavbar> {
+class _BottomNavBar extends State<DynamicBottomNavBar> {
   int _currentPageIndex = 0; // Menyimpan indeks halaman aktif
 
   // Daftar halaman yang terhubung dengan BotNav
   final List<Widget> _pages = <Widget>[
-    HomePage(), // Halaman Home
-    Profile(), // Halaman profile
+    const HomePage(), // Halaman Home
+    const Profile(), // Halaman Kelola Data
+    const About(), // Halaman Kelola Data
   ];
 
   void onTabTapped(int index) {
     setState(() {
-      _currentPageIndex =
-          index; // Ubah halaman aktif berdasarkan tab yang ditekan
+      _currentPageIndex = index; // Ubah halaman aktif berdasarkan tab yang ditekan
     });
   }
 
@@ -38,15 +39,15 @@ class _BottomNavbarState extends State<BottomNavbar> {
             label: 'Home', // Label Home
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_off_outlined), // Ikon
-            label: 'Profile', // Label Kelola Data
+            icon: Icon(Icons.person), // Ikon
+            label: 'Profile', // Label profile
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_off_outlined), // Ikon
+            icon: Icon(Icons.album_outlined), // Ikon
             label: 'About', // Label Kelola Data
           ),
         ],
-        backgroundColor: Colors.pink, // Warna latar BotNav
+        backgroundColor: const Color.fromARGB(255, 81, 1, 185), // Warna latar BotNav
         selectedItemColor: Colors.brown[200], // Warna item aktif
         unselectedItemColor: Colors.white, // Warna item tidak aktif
       ),

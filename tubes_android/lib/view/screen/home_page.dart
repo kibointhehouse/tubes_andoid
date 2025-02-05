@@ -4,7 +4,7 @@ import 'package:tubes_android/view/screen/login_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
-  // const HomePage({super.key});
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -193,6 +193,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+// LOGOUT
   void _showLogoutConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,

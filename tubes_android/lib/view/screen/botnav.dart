@@ -1,27 +1,27 @@
 import 'package:tubes_android/view/screen/home_page.dart';
 import 'package:flutter/material.dart';
-import 'home_page.dart';
 import 'profile.dart'; // Tambahkan file untuk halaman kedua
 
-class DynamicBottomNavBar extends StatefulWidget {
-  const DynamicBottomNavBar({super.key});
+class BottomNavbar extends StatefulWidget {
+  // const DynamicBottomNavBar({super.key});
 
   @override
-  _DynamicBottomNavBarState createState() => _DynamicBottomNavBarState();
+  _BottomNavbarState createState() => _BottomNavbarState();
 }
 
-class _DynamicBottomNavBarState extends State<DynamicBottomNavBar> {
+class _BottomNavbarState extends State<BottomNavbar> {
   int _currentPageIndex = 0; // Menyimpan indeks halaman aktif
 
   // Daftar halaman yang terhubung dengan BotNav
   final List<Widget> _pages = <Widget>[
-    const HomePage(), // Halaman Home
-    const Profile(), // Halaman Kelola Data
+    HomePage(), // Halaman Home
+    Profile(), // Halaman profile
   ];
 
   void onTabTapped(int index) {
     setState(() {
-      _currentPageIndex = index; // Ubah halaman aktif berdasarkan tab yang ditekan
+      _currentPageIndex =
+          index; // Ubah halaman aktif berdasarkan tab yang ditekan
     });
   }
 

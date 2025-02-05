@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_android/services/auth_manager.dart';
 import 'package:tubes_android/view/screen/login_page.dart';
-import 'package:tubes_android/view/screen/botnav.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
+  // const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -56,7 +55,11 @@ class _HomePageState extends State<HomePage> {
               _showLogoutConfirmationDialog(context);
             },
             icon: const Icon(Icons.logout),
-          )
+          ),
+          // Padding(
+          //   padding: const EdgeInsets.symmetric(horizontal: 10),
+          //   child: Text(username),  // Menampilkan username
+          // ),
         ],
       ),
       body: SingleChildScrollView(
@@ -108,7 +111,6 @@ class _HomePageState extends State<HomePage> {
           ],
         ),
       ),
-      // bottomNavigationBar: const DynamicBottomNavBar(),
     );
   }
 

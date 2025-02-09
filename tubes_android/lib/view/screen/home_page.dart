@@ -21,6 +21,9 @@ class _HomePageState extends State<HomePage> {
   String username = '';
   String token = '';
 
+  // List untuk menampung menu yang telah ditambahkan
+  final List<Map<String, dynamic>> _menuList = [];
+
   @override
   void initState() {
     super.initState();
@@ -56,59 +59,99 @@ class _HomePageState extends State<HomePage> {
             },
             icon: const Icon(Icons.logout),
           ),
-          // Padding(
-          //   padding: const EdgeInsets.symmetric(horizontal: 10),
-          //   child: Text(username),  // Menampilkan username
-          // ),
         ],
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-              elevation: 6,
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Form(
-                  key: _formKey,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Add New Menu',
-                        style: TextStyle(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      _buildTextField('Menu Name', _nameCtl, Icons.fastfood),
-                      const SizedBox(height: 12),
-                      _buildTextField('Price', _priceCtl, Icons.attach_money,
-                          isNumeric: true),
-                      const SizedBox(height: 12),
-                      _buildTextField(
-                          'Description', _descCtl, Icons.description,
-                          maxLines: 3),
-                      const SizedBox(height: 12),
-                      _buildTextField('Stock', _stockCtl, Icons.storage,
-                          isNumeric: true),
-                      const SizedBox(height: 12),
-                      _buildCategoryDropdown(),
-                      const SizedBox(height: 16),
-                      _buildImageUploader(),
-                      const SizedBox(height: 16),
-                      _buildSubmitButton(),
-                    ],
+            _buildUserInfoCard(),
+            const SizedBox(height: 16),
+            _buildAddMenuForm(),
+            const SizedBox(height: 16),
+            _buildMenuList(), // Menampilkan daftar menu yang telah ditambahkan
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildUserInfoCard() {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      elevation: 4,
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          children: [
+            const Icon(Icons.person, size: 50, color: Colors.deepPurple),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Username: $username",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Token: ${token.isNotEmpty ? token.substring(0, 10) + '...' : '-'}",
+                    style: const TextStyle(fontSize: 14, color: Colors.black54),
+                  ),
+                ],
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAddMenuForm() {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+      elevation: 6,
+      child: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Add New Menu',
+                style: TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              _buildTextField('Menu Name', _nameCtl, Icons.fastfood),
+              const SizedBox(height: 12),
+              _buildTextField('Price', _priceCtl, Icons.attach_money,
+                  isNumeric: true),
+              const SizedBox(height: 12),
+              _buildTextField('Description', _descCtl, Icons.description,
+                  maxLines: 3),
+              const SizedBox(height: 12),
+              _buildTextField('Stock', _stockCtl, Icons.storage,
+                  isNumeric: true),
+              const SizedBox(height: 12),
+              _buildCategoryDropdown(),
+              const SizedBox(height: 16),
+              _buildImageUploader(),
+              const SizedBox(height: 16),
+              _buildSubmitButton(),
+            ],
+          ),
         ),
       ),
     );
@@ -186,14 +229,14 @@ class _HomePageState extends State<HomePage> {
             borderRadius: BorderRadius.circular(12),
           ),
         ),
-        onPressed: () {},
+        onPressed: _addNewMenu,
         child: const Text('Submit',
             style: TextStyle(fontSize: 18, color: Colors.white)),
       ),
     );
   }
 
-// LOGOUT
+  // LOGOUT
   void _showLogoutConfirmationDialog(BuildContext context) {
     showDialog(
       context: context,
@@ -222,6 +265,53 @@ class _HomePageState extends State<HomePage> {
           ],
         );
       },
+    );
+  }
+
+// ADD MENU
+  void _addNewMenu() {
+    setState(() {
+      _menuList.add({
+        "name": _nameCtl.text,
+        "price": _priceCtl.text,
+        "description": _descCtl.text,
+        "stock": _stockCtl.text,
+        "category": _selectedCategory ?? 'Unknown',
+      });
+
+      _nameCtl.clear();
+      _priceCtl.clear();
+      _descCtl.clear();
+      _stockCtl.clear();
+      _selectedCategory = null;
+    });
+  }
+
+// Menampilkan daftar menu yang telah ditambahkan
+  Widget _buildMenuList() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text("Added Menus",
+            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        _menuList.isEmpty
+            ? const Text("No menu added yet",
+                style: TextStyle(fontSize: 16, color: Colors.grey))
+            : ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _menuList.length,
+                itemBuilder: (context, index) {
+                  final menu = _menuList[index];
+                  return ListTile(
+                    title: Text(menu["name"],
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text("Price: Rp ${menu["price"]}"),
+                  );
+                },
+              ),
+      ],
     );
   }
 }

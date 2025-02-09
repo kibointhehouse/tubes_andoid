@@ -3,16 +3,16 @@ import 'package:tubes_android/model/login_model.dart';
 import 'package:tubes_android/services/api_services.dart';
 import 'package:tubes_android/services/auth_manager.dart';
 import 'package:tubes_android/view/screen/botnav.dart';
-import 'package:tubes_android/view/screen/regis_page.dart'; // Tambahkan halaman register
+import 'package:tubes_android/view/screen/login_page.dart'; // Tambahkan halaman register
 
-class LoginPage extends StatefulWidget {
-  const LoginPage({super.key});
+class RegisPage extends StatefulWidget {
+  const RegisPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  _RegisPageState createState() => _RegisPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _RegisPageState extends State<RegisPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
@@ -124,7 +124,7 @@ class _LoginPageState extends State<LoginPage> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             const Text(
-                              "Login",
+                              "Registration",
                               style: TextStyle(
                                 fontSize: 28,
                                 fontWeight: FontWeight.bold,
@@ -132,6 +132,26 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ),
                             const SizedBox(height: 20),
+                            TextFormField(
+                              // controller: _usernameController,
+                              // validator: _validateUsername,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: _inputDecoration(
+                                "Full Name",
+                                Icons.near_me,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            TextFormField(
+                              // controller: _usernameController,
+                              // validator: _validateUsername,
+                              style: const TextStyle(color: Colors.white),
+                              decoration: _inputDecoration(
+                                "Phone Number",
+                                Icons.phone,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
                             TextFormField(
                               controller: _usernameController,
                               validator: _validateUsername,
@@ -169,7 +189,7 @@ class _LoginPageState extends State<LoginPage> {
                                       elevation: 5,
                                     ),
                                     child: const Text(
-                                      "Submit",
+                                      "Sign Up",
                                       style: TextStyle(
                                         color: Color(0xFF6A11CB),
                                         fontSize: 20,
@@ -182,7 +202,7 @@ class _LoginPageState extends State<LoginPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 const Text(
-                                  "Don't have an account yet?",
+                                  "Already have an account?",
                                   style: TextStyle(
                                     fontSize: 16,
                                     color: Colors.white,
@@ -193,12 +213,12 @@ class _LoginPageState extends State<LoginPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => const RegisPage(),
+                                        builder: (context) => const LoginPage(),
                                       ),
                                     );
                                   },
                                   child: const Text(
-                                    "Sign up here.",
+                                    "Sign in here.",
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,

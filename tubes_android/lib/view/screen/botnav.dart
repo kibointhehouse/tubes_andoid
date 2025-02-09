@@ -48,7 +48,7 @@ class _BottomNavBar extends State<DynamicBottomNavBar> {
           ),
         ],
         backgroundColor: const Color.fromARGB(255, 81, 1, 185), // Warna latar BotNav
-        selectedItemColor: Colors.brown[200], // Warna item aktif
+        selectedItemColor: const Color.fromARGB(255, 220, 210, 232), // Warna item aktif
         unselectedItemColor: Colors.white, // Warna item tidak aktif
       ),
     );

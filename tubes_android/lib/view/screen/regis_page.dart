@@ -29,16 +29,58 @@ class _RegisPageState extends State<RegisPage> {
     super.dispose();
   }
 
-  String? _validateUsername(String? value) {
-    if (value == null || value.length < 4) {
-      return 'Masukkan minimal 4 karakter';
+// Fullname Validation
+  String? _validateFullname(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Nama lengkap tidak boleh kosong';
+    }
+    // Cek apakah setiap kata diawali huruf besar
+    List<String> words = value.split(" ");
+    for (var word in words) {
+      if (word.isNotEmpty && word[0] != word[0].toUpperCase()) {
+        return 'Setiap kata harus diawali huruf kapital';
+      }
+    }
+    // Cek apakah ada angka atau karakter unik
+    if (!RegExp(r'^[A-Za-z\s]+$').hasMatch(value)) {
+      return 'Nama hanya boleh berisi huruf dan spasi';
+    }
+
+    return null;
+  }
+
+// Phone Number Validation
+  String? _validatePhoneNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Nomor telepon tidak boleh kosong';
+    }
+    if (!RegExp(r'^62\d{8,13}$').hasMatch(value)) {
+      return 'Nomor telepon harus diawali 62 dan berisi 10-15 angka';
     }
     return null;
   }
 
+// Username Validation
+  String? _validateUsername(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Username tidak boleh kosong';
+    }
+    if (value.length < 4) {
+      return 'Username minimal 4 karakter';
+    }
+    if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
+      return 'Username hanya boleh berisi huruf dan angka';
+    }
+    return null;
+  }
+
+// Password Validation
   String? _validatePassword(String? value) {
-    if (value == null || value.length < 3) {
-      return 'Masukkan minimal 3 karakter';
+    if (value == null || value.isEmpty) {
+      return 'Password tidak boleh kosong';
+    }
+    if (value.length < 3) {
+      return 'Password minimal 3 karakter';
     }
     return null;
   }
@@ -69,13 +111,16 @@ class _RegisPageState extends State<RegisPage> {
           _clearForm(); // Clear form dan update UI
         });
 
-        _showSnackbar("Registrasi berhasil, silakan login!");
+        String roleMessage = res?.role != null
+            ? "Role: ${res!.role}" // Menampilkan role yang diterima
+            : "Role tidak ditemukan";
+
+        _showSnackbar("Registrasi berhasil! $roleMessage");
 
         Future.delayed(const Duration(seconds: 2), () {
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(
-                builder: (context) => const LoginPage()),
+            MaterialPageRoute(builder: (context) => const LoginPage()),
             (route) => false,
           );
         });
@@ -154,7 +199,7 @@ class _RegisPageState extends State<RegisPage> {
                             const SizedBox(height: 20),
                             TextFormField(
                               controller: _fullnameController,
-                              // validator: _validateFullname,
+                              validator: _validateFullname,
                               style: const TextStyle(color: Colors.white),
                               decoration: _inputDecoration(
                                 "Full Name",
@@ -164,7 +209,7 @@ class _RegisPageState extends State<RegisPage> {
                             const SizedBox(height: 16),
                             TextFormField(
                               controller: _phonenumberController,
-                              // validator: _validateUsername,
+                              validator: _validatePhoneNumber,
                               style: const TextStyle(color: Colors.white),
                               decoration: _inputDecoration(
                                 "Phone Number",

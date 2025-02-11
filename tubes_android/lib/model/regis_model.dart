@@ -25,11 +25,13 @@ class RegisResponse {
   final int? status;
   final String message;
   final String? userId;
+  final String? role; 
 
   RegisResponse({
     required this.status,
     required this.message,
     this.userId,
+    this.role,
   });
 
   factory RegisResponse.fromJson(Map<String, dynamic> json) {
@@ -37,6 +39,7 @@ class RegisResponse {
       status: json["status"],
       message: json["message"] ?? "Unknown error",
       userId: json["user"]?["_id"],
+      role: json["user"]?["role"], 
     );
   }
 }

@@ -3,7 +3,8 @@ import 'package:tubes_android/model/login_model.dart';
 import 'package:tubes_android/services/api_services.dart';
 import 'package:tubes_android/services/auth_manager.dart';
 import 'package:tubes_android/view/screen/botnav.dart';
-import 'package:tubes_android/view/screen/regis_page.dart'; // Tambahkan halaman register
+import 'package:tubes_android/view/screen/regis_page.dart';
+import 'package:tubes_android/view/screen/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -178,6 +179,8 @@ class _LoginPageState extends State<LoginPage> {
                                     ),
                                   ),
                             const SizedBox(height: 16),
+
+                            // Teks "Don't have an account yet?"
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -202,13 +205,32 @@ class _LoginPageState extends State<LoginPage> {
                                     style: TextStyle(
                                       fontSize: 16,
                                       fontWeight: FontWeight.bold,
-                                      color: Color(
-                                          0xFFFFD700), // Warna emas agar mencolok
+                                      color: Color(0xFFFFD700), // Warna emas
                                     ),
                                   ),
                                 ),
                               ],
-                              
+                            ),
+
+                            // Tombol "Back to Home"
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomePage(),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                "Back to Home",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  decoration: TextDecoration.underline,
+                                ),
+                              ),
                             ),
                           ],
                         ),

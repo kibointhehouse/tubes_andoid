@@ -3,6 +3,7 @@ import 'package:tubes_android/model/login_model.dart';
 import 'package:tubes_android/services/api_services.dart';
 import 'package:tubes_android/services/auth_manager.dart';
 import 'package:tubes_android/view/screen/botnav.dart';
+import 'package:tubes_android/view/screen/home_page.dart';
 import 'package:tubes_android/view/screen/login_page.dart'; // Tambahkan halaman register
 
 class RegisPage extends StatefulWidget {
@@ -228,6 +229,27 @@ class _RegisPageState extends State<RegisPage> {
                                   ),
                                 ),
                               ],
+                            ),
+
+                            // Tombol "Back to Home"
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => const HomePage(),
+                                  ),
+                                );
+                              },
+                              child: const Text(
+                                "Back to Home",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  // decoration: TextDecoration.underline,
+                                ),
+                              ),
                             ),
                           ],
                         ),

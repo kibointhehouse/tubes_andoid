@@ -1,42 +1,42 @@
-
-//DIGUNAKAN UNTUK FORM INPUT
 class RegisInput {
-  final String fullName;
-  final String phoneNumber;
+  final String fullname;
+  final String phonenumber;
   final String username;
   final String password;
 
   RegisInput({
-    required this.fullName,
-    required this.phoneNumber,
+    required this.fullname,
+    required this.phonenumber,
     required this.username,
     required this.password,
   });
 
-  Map<String, dynamic> toJson() => {
-        "name": fullName,
-        "phone_number": phoneNumber,
-        "username": username,
-        "password": password,
-      };
+  Map<String, dynamic> toJson() {
+    return {
+      "name": fullname,
+      "phone_number": phonenumber,
+      "username": username,
+      "password": password,
+    };
+  }
 }
 
-//DIGUNAKAN UNTUK RESPONSE
 class RegisResponse {
-  final String? regisId;
+  final int? status;
   final String message;
-  final int status;
+  final String? userId;
 
   RegisResponse({
-    this.regisId,
-    required this.message,
     required this.status,
+    required this.message,
+    this.userId,
   });
 
-  factory RegisResponse.fromJson(Map<String, dynamic> json) =>
-      RegisResponse(
-        regisId: json["id"],
-        message: json["message"],
-        status: json["status"],
-      );
+  factory RegisResponse.fromJson(Map<String, dynamic> json) {
+    return RegisResponse(
+      status: json["status"],
+      message: json["message"] ?? "Unknown error",
+      userId: json["user"]?["_id"],
+    );
+  }
 }

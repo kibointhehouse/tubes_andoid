@@ -54,23 +54,29 @@ class _LoginPageState extends State<LoginPage> {
       setState(() => isLoading = false);
 
       if (res?.status == 200) {
+        // Simpan token dan role untuk otorisasi
         await AuthManager.login(_usernameController.text, res!.token!);
+
+        _showSnackbar("Login sukses! Role: ${res.role}", Colors.green);
+
+        // Navigasi ke halaman utama
         Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const DynamicBottomNavBar()),
           (route) => false,
         );
       } else {
-        _showSnackbar(res?.message ?? "Login gagal");
+        _showSnackbar(res?.message ?? "Login gagal", Colors.redAccent);
       }
     }
   }
 
-  void _showSnackbar(String msg) {
+// 🔹 Helper untuk menampilkan Snackbar
+  void _showSnackbar(String msg, Color color) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg, style: const TextStyle(fontSize: 16)),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: color,
         behavior: SnackBarBehavior.floating,
       ),
     );

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_android/model/login_model.dart';
+import 'package:tubes_android/model/regis_model.dart';
 import 'package:tubes_android/services/api_services.dart';
-import 'package:tubes_android/services/auth_manager.dart';
-import 'package:tubes_android/view/screen/botnav.dart';
 import 'package:tubes_android/view/screen/home_page.dart';
-import 'package:tubes_android/view/screen/login_page.dart'; // Tambahkan halaman register
+import 'package:tubes_android/view/screen/login_page.dart';
 
 class RegisPage extends StatefulWidget {
   const RegisPage({super.key});
@@ -15,6 +13,8 @@ class RegisPage extends StatefulWidget {
 
 class _RegisPageState extends State<RegisPage> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _fullnameController = TextEditingController();
+  final _phonenumberController = TextEditingController();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
   final ApiServices _dataService = ApiServices();
@@ -22,6 +22,8 @@ class _RegisPageState extends State<RegisPage> {
 
   @override
   void dispose() {
+    _fullnameController.dispose();
+    _phonenumberController.dispose();
     _usernameController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -41,27 +43,44 @@ class _RegisPageState extends State<RegisPage> {
     return null;
   }
 
-  void _handleLogin() async {
+  void _clearForm() {
+    _fullnameController.clear();
+    _phonenumberController.clear();
+    _usernameController.clear();
+    _passwordController.clear();
+  }
+
+  void _handleRegister() async {
     if (_formKey.currentState!.validate()) {
       setState(() => isLoading = true);
 
-      final postModel = LoginInput(
+      final regisModel = RegisInput(
+        fullname: _fullnameController.text,
+        phonenumber: _phonenumberController.text,
         username: _usernameController.text,
         password: _passwordController.text,
       );
 
-      LoginResponse? res = await _dataService.login(postModel);
+      RegisResponse? res = await _dataService.register(regisModel);
       setState(() => isLoading = false);
 
-      if (res?.status == 200) {
-        await AuthManager.login(_usernameController.text, res!.token!);
-        Navigator.pushAndRemoveUntil(
-          context,
-          MaterialPageRoute(builder: (context) => const DynamicBottomNavBar()),
-          (route) => false,
-        );
+      if (res?.status == 201) {
+        setState(() {
+          _clearForm(); // Clear form dan update UI
+        });
+
+        _showSnackbar("Registrasi berhasil, silakan login!");
+
+        Future.delayed(const Duration(seconds: 2), () {
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => const LoginPage()),
+            (route) => false,
+          );
+        });
       } else {
-        _showSnackbar(res?.message ?? "Login gagal");
+        _showSnackbar(res?.message ?? "Registrasi gagal");
       }
     }
   }
@@ -70,7 +89,7 @@ class _RegisPageState extends State<RegisPage> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(msg, style: const TextStyle(fontSize: 16)),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.green,
         behavior: SnackBarBehavior.floating,
       ),
     );
@@ -134,8 +153,8 @@ class _RegisPageState extends State<RegisPage> {
                             ),
                             const SizedBox(height: 20),
                             TextFormField(
-                              // controller: _usernameController,
-                              // validator: _validateUsername,
+                              controller: _fullnameController,
+                              // validator: _validateFullname,
                               style: const TextStyle(color: Colors.white),
                               decoration: _inputDecoration(
                                 "Full Name",
@@ -144,7 +163,7 @@ class _RegisPageState extends State<RegisPage> {
                             ),
                             const SizedBox(height: 16),
                             TextFormField(
-                              // controller: _usernameController,
+                              controller: _phonenumberController,
                               // validator: _validateUsername,
                               style: const TextStyle(color: Colors.white),
                               decoration: _inputDecoration(
@@ -177,7 +196,7 @@ class _RegisPageState extends State<RegisPage> {
                             isLoading
                                 ? const CircularProgressIndicator()
                                 : ElevatedButton(
-                                    onPressed: _handleLogin,
+                                    onPressed: _handleRegister,
                                     style: ElevatedButton.styleFrom(
                                       padding: const EdgeInsets.symmetric(
                                         vertical: 15,

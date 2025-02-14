@@ -241,12 +241,13 @@ class _RegisPageState extends State<RegisPage> {
                             isLoading
                                 ? const CircularProgressIndicator()
                                 : ElevatedButton(
-                                    onPressed: _handleRegister,
+                                    onPressed: () {
+                                      _handleRegister();
+                                      _clearForm(); // Tambahkan ini untuk memastikan form di-reset
+                                    },
                                     style: ElevatedButton.styleFrom(
                                       padding: const EdgeInsets.symmetric(
-                                        vertical: 15,
-                                        horizontal: 40,
-                                      ),
+                                          vertical: 15, horizontal: 40),
                                       backgroundColor: Colors.white,
                                       shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(12),

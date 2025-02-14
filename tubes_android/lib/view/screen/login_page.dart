@@ -55,7 +55,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (res?.status == 200) {
         // Simpan token dan role untuk otorisasi
-        await AuthManager.login(_usernameController.text, res!.token!);
+        await AuthManager.login(_usernameController.text, res!.token!, res.role!);
 
         _showSnackbar("Login sukses! Role: ${res.role}", Colors.green);
 

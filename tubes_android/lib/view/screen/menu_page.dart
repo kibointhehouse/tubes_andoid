@@ -20,6 +20,7 @@ class _MenuPageState extends State<MenuPage> {
   late SharedPreferences loginData;
   String username = '';
   String token = '';
+  String role = '';
 
   // List untuk menampung menu yang telah ditambahkan
   final List<Map<String, dynamic>> _menuList = [];
@@ -35,6 +36,7 @@ class _MenuPageState extends State<MenuPage> {
     setState(() {
       username = loginData.getString('username') ?? '';
       token = loginData.getString('token') ?? '';
+      role = loginData.getString('role') ?? '';
     });
   }
 
@@ -94,6 +96,14 @@ class _MenuPageState extends State<MenuPage> {
                 children: [
                   Text(
                     "Username: $username",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    "Role: $role",
                     style: const TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

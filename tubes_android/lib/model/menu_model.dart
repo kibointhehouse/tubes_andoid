@@ -1,4 +1,3 @@
-//DIGUNAKAN UNTUK GET ALL DATA
 class MenuModel {
   final String id;
   final String menuName;
@@ -18,13 +17,13 @@ class MenuModel {
     required this.menuCategories,
   });
 
-    factory MenuModel.fromJson(Map<String, dynamic> json) => MenuModel(
+  factory MenuModel.fromJson(Map<String, dynamic> json) => MenuModel(
         id: json["_id"],
         menuName: json["menu_name"],
         image: json["image"],
-        price: json["price"],
+        price: json["price"].toString(),
         description: json["description"],
-        stock: json["stock"],
+        stock: json["stock"].toString(),
         menuCategories: json["menu_categories"],
       );
 
@@ -39,10 +38,9 @@ class MenuModel {
       };
 }
 
-//DIGUNAKAN UNTUK FORM INPUT
+// Model untuk input form
 class MenuInput {
   final String menuName;
-  final String image;
   final String price;
   final String description;
   final String stock;
@@ -50,7 +48,6 @@ class MenuInput {
 
   MenuInput({
     required this.menuName,
-    required this.image,
     required this.price,
     required this.description,
     required this.stock,
@@ -59,7 +56,6 @@ class MenuInput {
 
   Map<String, dynamic> toJson() => {
         "menu_name": menuName,
-        "image": image,
         "price": price,
         "description": description,
         "stock": stock,
@@ -67,7 +63,7 @@ class MenuInput {
       };
 }
 
-//DIGUNAKAN UNTUK RESPONSE
+// Model untuk response dari API
 class MenuResponse {
   final String? insertedId;
   final String message;
@@ -79,9 +75,8 @@ class MenuResponse {
     required this.status,
   });
 
-  factory MenuResponse.fromJson(Map<String, dynamic> json) =>
-      MenuResponse(
-        insertedId: json["inserted_id"],
+  factory MenuResponse.fromJson(Map<String, dynamic> json) => MenuResponse(
+        insertedId: json["inserted_id"]?["_id"],
         message: json["message"],
         status: json["status"],
       );

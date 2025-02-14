@@ -28,11 +28,12 @@ class AuthManager {
     return false;
   }
 
-  static Future<void> login(String username, String token) async {
+  static Future<void> login(String username, String token, String role) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setBool('loginStatusKey', true);
     prefs.setString('loginTimeKey', DateTime.now().toString());
     prefs.setString('username', username);
+    prefs.setString('role', role);
     prefs.setString('token', token);
   }
 
@@ -41,6 +42,7 @@ class AuthManager {
     prefs.remove('loginStatusKey');
     prefs.remove('loginTimeKey');
     prefs.remove('username');
+    prefs.remove('role');
     prefs.remove('token');
   }
 }

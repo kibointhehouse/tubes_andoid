@@ -1,10 +1,9 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:tubes_android/services/auth_manager.dart';
-// import 'package:tubes_android/model/menu_model.dart';
 import 'package:tubes_android/view/screen/login_page.dart';
-// import 'package:tubes_android/view/screen/menu_page.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:tubes_android/services/api_services.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MenuPage extends StatefulWidget {
   const MenuPage({super.key});
@@ -20,12 +19,12 @@ class _MenuPageState extends State<MenuPage> {
   final _descCtl = TextEditingController();
   final _stockCtl = TextEditingController();
   String? _selectedCategory;
+  File? _image;
   late SharedPreferences loginData;
   String username = '';
   String token = '';
   String role = '';
 
-  // List untuk menampung menu yang telah ditambahkan
   final List<Map<String, dynamic>> _menuList = [];
 
   @override
@@ -52,6 +51,47 @@ class _MenuPageState extends State<MenuPage> {
     super.dispose();
   }
 
+  Future<void> _pickImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
+    }
+  }
+
+  void _showLogoutConfirmationDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: const Text('Konfirmasi Logout'),
+          content: const Text('Anda yakin ingin logout?'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(dialogContext).pop();
+              },
+              child: const Text('Tidak'),
+            ),
+            TextButton(
+              onPressed: () async {
+                await AuthManager.logout();
+                Navigator.pushAndRemoveUntil(
+                  dialogContext,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                  (Route<dynamic> route) => false,
+                );
+              },
+              child: const Text('Ya'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -74,14 +114,39 @@ class _MenuPageState extends State<MenuPage> {
             const SizedBox(height: 16),
             _buildAddMenuForm(),
             const SizedBox(height: 16),
-            _buildMenuList(), // Menampilkan daftar menu yang telah ditambahkan
+            _buildMenuList(),
           ],
         ),
       ),
     );
   }
 
-// CARD
+  Widget _buildMenuList() {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: _menuList.length,
+      itemBuilder: (context, index) {
+        final menu = _menuList[index];
+        return Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+          elevation: 4,
+          child: ListTile(
+            leading: menu['image'] != null
+                ? Image.file(File(menu['image']),
+                    width: 50, height: 50, fit: BoxFit.cover)
+                : const Icon(Icons.image, size: 50, color: Colors.grey),
+            title: Text(menu['name']),
+            subtitle: Text('Price: ${menu['price']}\nStock: ${menu['stock']}'),
+            trailing: Text(menu['category'] ?? 'No Category'),
+          ),
+        );
+      },
+    );
+  }
+
   Widget _buildUserInfoCard() {
     return Card(
       shape: RoundedRectangleBorder(
@@ -193,7 +258,9 @@ class _MenuPageState extends State<MenuPage> {
         prefixIcon: const Icon(Icons.category, color: Colors.deepPurple),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
       ),
-      value: _selectedCategory,
+      value:
+          _selectedCategory, // Tidak perlu cek isNotEmpty karena null sudah bisa diterima
+      hint: const Text('Select Category'), // Tambahkan hint
       items: ['Makanan', 'Minuman']
           .map((category) => DropdownMenuItem(
                 value: category,
@@ -205,6 +272,9 @@ class _MenuPageState extends State<MenuPage> {
           _selectedCategory = value;
         });
       },
+      validator: (value) => value == null
+          ? 'Please select a category'
+          : null, // Validasi kategori
     );
   }
 
@@ -216,19 +286,26 @@ class _MenuPageState extends State<MenuPage> {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: Colors.grey.shade400),
       ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.image, size: 50, color: Colors.deepPurple),
-            const SizedBox(height: 8),
-            TextButton(
-              onPressed: () {},
-              child: const Text('Upload Image', style: TextStyle(fontSize: 16)),
+      child: _image == null
+          ? Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.image, size: 50, color: Colors.deepPurple),
+                  const SizedBox(height: 8),
+                  TextButton(
+                    onPressed: _pickImage,
+                    child: const Text('Upload Image',
+                        style: TextStyle(fontSize: 16)),
+                  ),
+                ],
+              ),
+            )
+          : ClipRRect(
+              borderRadius: BorderRadius.circular(12),
+              child: Image.file(_image!,
+                  fit: BoxFit.cover, width: double.infinity, height: 150),
             ),
-          ],
-        ),
-      ),
     );
   }
 
@@ -250,82 +327,28 @@ class _MenuPageState extends State<MenuPage> {
     );
   }
 
-  // LOGOUT
-  void _showLogoutConfirmationDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext dialogContext) {
-        return AlertDialog(
-          title: const Text('Konfirmasi Logout'),
-          content: const Text('Anda yakin ingin logout?'),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(dialogContext).pop();
-              },
-              child: const Text('Tidak'),
-            ),
-            TextButton(
-              onPressed: () async {
-                await AuthManager.logout();
-                Navigator.pushAndRemoveUntil(
-                  dialogContext,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                  (Route<dynamic> route) => false,
-                );
-              },
-              child: const Text('Ya'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-// ADD MENU
   void _addNewMenu() {
-    setState(() {
-      _menuList.add({
-        "name": _nameCtl.text,
-        "price": _priceCtl.text,
-        "description": _descCtl.text,
-        "stock": _stockCtl.text,
-        "category": _selectedCategory ?? 'Unknown',
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _menuList.add({
+          "name": _nameCtl.text,
+          "price": _priceCtl.text,
+          "description": _descCtl.text,
+          "stock": _stockCtl.text,
+          "category": _selectedCategory ?? 'Unknown',
+          "image": _image?.path, // Simpan sebagai String (path)
+        });
+
+        print("Added menu: $_menuList"); // Debugging
+
+        // Reset Form
+        _nameCtl.clear();
+        _priceCtl.clear();
+        _descCtl.clear();
+        _stockCtl.clear();
+        _selectedCategory = null;
+        _image = null;
       });
-
-      _nameCtl.clear();
-      _priceCtl.clear();
-      _descCtl.clear();
-      _stockCtl.clear();
-      _selectedCategory = null;
-    });
-  }
-
-// Menampilkan daftar menu yang telah ditambahkan
-  Widget _buildMenuList() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text("Added Menus",
-            style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 10),
-        _menuList.isEmpty
-            ? const Text("No menu added yet",
-                style: TextStyle(fontSize: 16, color: Colors.grey))
-            : ListView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemCount: _menuList.length,
-                itemBuilder: (context, index) {
-                  final menu = _menuList[index];
-                  return ListTile(
-                    title: Text(menu["name"],
-                        style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text("Price: Rp ${menu["price"]}"),
-                  );
-                },
-              ),
-      ],
-    );
+    }
   }
 }

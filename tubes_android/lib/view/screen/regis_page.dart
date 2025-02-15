@@ -29,27 +29,24 @@ class _RegisPageState extends State<RegisPage> {
     super.dispose();
   }
 
-// Fullname Validation
+// Validasi Nama Lengkap
   String? _validateFullname(String? value) {
     if (value == null || value.isEmpty) {
       return 'Nama lengkap tidak boleh kosong';
     }
-    // Cek apakah setiap kata diawali huruf besar
     List<String> words = value.split(" ");
     for (var word in words) {
       if (word.isNotEmpty && word[0] != word[0].toUpperCase()) {
         return 'Setiap kata harus diawali huruf kapital';
       }
     }
-    // Cek apakah ada angka atau karakter unik
     if (!RegExp(r'^[A-Za-z\s]+$').hasMatch(value)) {
       return 'Nama hanya boleh berisi huruf dan spasi';
     }
-
     return null;
   }
 
-// Phone Number Validation
+// Validasi Nomor Telepon
   String? _validatePhoneNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Nomor telepon tidak boleh kosong';
@@ -60,7 +57,7 @@ class _RegisPageState extends State<RegisPage> {
     return null;
   }
 
-// Username Validation
+// Validasi Username
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) {
       return 'Username tidak boleh kosong';
@@ -74,7 +71,7 @@ class _RegisPageState extends State<RegisPage> {
     return null;
   }
 
-// Password Validation
+// Validasi Password
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password tidak boleh kosong';
@@ -83,13 +80,6 @@ class _RegisPageState extends State<RegisPage> {
       return 'Password minimal 3 karakter';
     }
     return null;
-  }
-
-  void _clearForm() {
-    _fullnameController.clear();
-    _phonenumberController.clear();
-    _usernameController.clear();
-    _passwordController.clear();
   }
 
   void _handleRegister() async {
@@ -107,15 +97,14 @@ class _RegisPageState extends State<RegisPage> {
       setState(() => isLoading = false);
 
       if (res?.status == 201) {
-        setState(() {
-          _clearForm(); // Clear form dan update UI
-        });
+        _showSnackbar(
+            "Registrasi berhasil! Role: ${res?.role ?? 'Tidak ditemukan'}");
 
-        String roleMessage = res?.role != null
-            ? "Role: ${res!.role}" // Menampilkan role yang diterima
-            : "Role tidak ditemukan";
-
-        _showSnackbar("Registrasi berhasil! $roleMessage");
+        // Hapus data hanya jika registrasi berhasil
+        _fullnameController.clear();
+        _phonenumberController.clear();
+        _usernameController.clear();
+        _passwordController.clear();
 
         Future.delayed(const Duration(seconds: 2), () {
           Navigator.pushAndRemoveUntil(
@@ -197,54 +186,20 @@ class _RegisPageState extends State<RegisPage> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            TextFormField(
-                              controller: _fullnameController,
-                              validator: _validateFullname,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: _inputDecoration(
-                                "Full Name",
-                                Icons.near_me,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _phonenumberController,
-                              validator: _validatePhoneNumber,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: _inputDecoration(
-                                "Phone Number",
-                                Icons.phone,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _usernameController,
-                              validator: _validateUsername,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: _inputDecoration(
-                                "Username",
-                                Icons.person,
-                              ),
-                            ),
-                            const SizedBox(height: 16),
-                            TextFormField(
-                              controller: _passwordController,
-                              validator: _validatePassword,
-                              obscureText: true,
-                              style: const TextStyle(color: Colors.white),
-                              decoration: _inputDecoration(
-                                "Password",
-                                Icons.lock,
-                              ),
-                            ),
+                            _buildTextField("Full Name", Icons.near_me,
+                                _fullnameController, _validateFullname),
+                            _buildTextField("Phone Number", Icons.phone,
+                                _phonenumberController, _validatePhoneNumber),
+                            _buildTextField("Username", Icons.person,
+                                _usernameController, _validateUsername),
+                            _buildTextField("Password", Icons.lock,
+                                _passwordController, _validatePassword,
+                                obscureText: true),
                             const SizedBox(height: 24),
                             isLoading
                                 ? const CircularProgressIndicator()
                                 : ElevatedButton(
-                                    onPressed: () {
-                                      _handleRegister();
-                                      _clearForm(); // Tambahkan ini untuk memastikan form di-reset
-                                    },
+                                    onPressed: _handleRegister,
                                     style: ElevatedButton.styleFrom(
                                       padding: const EdgeInsets.symmetric(
                                           vertical: 15, horizontal: 40),
@@ -264,56 +219,20 @@ class _RegisPageState extends State<RegisPage> {
                                     ),
                                   ),
                             const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                const Text(
-                                  "Already have an account?",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) => const LoginPage(),
-                                      ),
-                                    );
-                                  },
-                                  child: const Text(
-                                    "Sign in here.",
-                                    style: TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                      color: Color(
-                                          0xFFFFD700), // Warna emas agar mencolok
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            // Tombol "Back to Home"
                             TextButton(
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => const HomePage(),
-                                  ),
+                                      builder: (context) => const HomePage()),
                                 );
                               },
                               child: const Text(
                                 "Back to Home",
                                 style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  // decoration: TextDecoration.underline,
-                                ),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white),
                               ),
                             ),
                           ],
@@ -330,17 +249,27 @@ class _RegisPageState extends State<RegisPage> {
     );
   }
 
-  InputDecoration _inputDecoration(String label, IconData icon) {
-    return InputDecoration(
-      labelText: label,
-      labelStyle: const TextStyle(color: Colors.white70),
-      filled: true,
-      fillColor: Colors.white.withOpacity(0.2),
-      border: OutlineInputBorder(
-        borderRadius: BorderRadius.circular(12),
-        borderSide: BorderSide.none,
+  Widget _buildTextField(String label, IconData icon,
+      TextEditingController controller, String? Function(String?) validator,
+      {bool obscureText = false}) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: TextFormField(
+        controller: controller,
+        validator: validator,
+        obscureText: obscureText,
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.white70),
+          filled: true,
+          fillColor: Colors.white.withOpacity(0.2),
+          border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide.none),
+          prefixIcon: Icon(icon, color: Colors.white70),
+        ),
       ),
-      prefixIcon: Icon(icon, color: Colors.white70),
     );
   }
 }

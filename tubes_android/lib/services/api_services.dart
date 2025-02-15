@@ -75,6 +75,25 @@ class ApiServices {
     return prefs.getString('token'); // Ambil token JWT dari local storage
   }
 
+  Future<List<MenuModel>?> getAllMenus() async {
+    try {
+      final response = await _dio.get("/menu/");
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = response.data["menus"];
+        return data.map((menu) => MenuModel.fromJson(menu)).toList();
+      } else {
+        return null;
+      }
+    } on DioException catch (e) {
+      print("Error fetching menus: ${e.message}");
+      return null;
+    } catch (e) {
+      print("Unexpected error: $e");
+      return null;
+    }
+  }
+
   // Fungsi untuk insert menu (dengan otentikasi token)
 //   Future<MenuResponse?> insertMenu(MenuInput menu, File imageFile) async {
 //     try {
@@ -119,6 +138,4 @@ class ApiServices {
 //       return MenuResponse(status: 500, message: "Unexpected error: $e");
 //     }
 //   }
-
-
 }

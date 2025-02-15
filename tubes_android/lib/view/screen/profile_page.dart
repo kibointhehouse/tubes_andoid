@@ -1,27 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_android/services/auth_manager.dart';
 import 'package:tubes_android/view/screen/login_page.dart';
-import 'package:tubes_android/view/screen/home_page.dart';
+import 'package:tubes_android/view/screen/menu_page.dart';
 
-class Profile extends StatefulWidget {
+class Profile extends StatelessWidget {
   const Profile({super.key});
 
-  @override
-  _ProfileState createState() => _ProfileState();
-}
-
-class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile'),
+        title: const Text('Profile',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
+        backgroundColor: Colors.blueAccent,
         actions: [
           IconButton(
             onPressed: () {
               _showLogoutConfirmationDialog(context);
             },
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout, color: Colors.white),
           ),
         ],
       ),
@@ -29,35 +27,51 @@ class _ProfileState extends State<Profile> {
         children: [
           Container(
             padding: const EdgeInsets.all(20.0),
-            decoration: BoxDecoration(
-              gradient: const LinearGradient(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
                 colors: [Colors.blueAccent, Colors.lightBlue],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
-              borderRadius: const BorderRadius.only(
+              borderRadius: BorderRadius.only(
                 bottomLeft: Radius.circular(30),
                 bottomRight: Radius.circular(30),
               ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black26,
+                  blurRadius: 10,
+                  spreadRadius: 2,
+                  offset: Offset(0, 5),
+                ),
+              ],
             ),
-            child: const CircleAvatar(
-              radius: 50,
-              backgroundColor: Colors.white,
-              child: Icon(Icons.person, size: 50, color: Colors.blueAccent),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: const [
+                _ProfileCard(
+                  name: 'Kresnanda Randyansyah',
+                  npm: '714220052',
+                  icon: Icons.person,
+                ),
+                _ProfileCard(
+                  name: 'Ghaida Fasya',
+                  npm: '714220031',
+                  icon: Icons.person,
+                ),
+              ],
             ),
           ),
           const SizedBox(height: 20),
           Expanded(
             child: ListView(
               children: [
-                _buildProfileOption(Icons.home, 'Home', () {
+                _buildProfileOption(Icons.menu_book, 'Menu', () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const HomePage()),
+                    MaterialPageRoute(builder: (context) => const MenuPage()),
                   );
                 }),
-                _buildProfileOption(Icons.lock, 'Keamanan', () {}),
-                _buildProfileOption(Icons.help, 'Bantuan', () {}),
               ],
             ),
           ),
@@ -65,22 +79,70 @@ class _ProfileState extends State<Profile> {
       ),
     );
   }
+}
 
-  Widget _buildProfileOption(IconData icon, String title, VoidCallback onTap) {
-    return Card(
-      elevation: 2,
-      margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
-      ),
-      child: ListTile(
-        leading: Icon(icon, color: Colors.blueAccent),
-        title: Text(title, style: const TextStyle(fontSize: 16)),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: onTap,
-      ),
+class _ProfileCard extends StatelessWidget {
+  final String name;
+  final String npm;
+  final IconData icon;
+
+  const _ProfileCard({
+    required this.name,
+    required this.npm,
+    required this.icon,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 50,
+          backgroundColor: Colors.white,
+          child: Icon(icon, size: 50, color: Colors.blueAccent),
+        ),
+        const SizedBox(height: 10),
+        Text(
+          name,
+          style: const TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
+        Text(
+          'D4 Teknik Informatika',
+          style: const TextStyle(
+            fontSize: 16,
+            color: Colors.white70,
+          ),
+        ),
+        Text(
+          'NPM $npm',
+          style: const TextStyle(
+            fontSize: 14,
+            color: Colors.white70,
+          ),
+        ),
+      ],
     );
   }
+}
+
+Widget _buildProfileOption(IconData icon, String title, VoidCallback onTap) {
+  return Card(
+    elevation: 2,
+    margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 8),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(15),
+    ),
+    child: ListTile(
+      leading: Icon(icon, color: Colors.blueAccent),
+      title: Text(title, style: const TextStyle(fontSize: 16)),
+      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+      onTap: onTap,
+    ),
+  );
 }
 
 void _showLogoutConfirmationDialog(BuildContext context) {

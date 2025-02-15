@@ -1,4 +1,6 @@
 include: package:flutter_lints/flutter.yaml
 analyzer:
   errors:
-    depend_on_referenced_packages: ignore ignore
+    # depend_on_referenced_packages: ignore ignore ignore
+    unused_element: ignore
+    use_super_parameters: ignore

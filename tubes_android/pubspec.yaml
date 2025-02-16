@@ -11,10 +11,10 @@ dependencies:
     sdk: flutter
   dio: ^5.7.0
   shared_preferences: ^2.5.1
-  image_picker: ^1.1.2
-  file_picker: ^9.0.0
-  open_file: ^3.5.10
-  image_picker_web: ^4.0.0
+  # image_picker: ^1.1.2
+  # file_picker: ^9.0.0
+  # open_file: ^3.5.10
+  # image_picker_web: ^4.0.0
 
 dev_dependencies:
   flutter_test:

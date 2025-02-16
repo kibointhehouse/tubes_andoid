@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_android/model/regis_model.dart';
 import 'package:tubes_android/services/api_services.dart';
-import 'package:tubes_android/view/screen/home_page.dart';
+// import 'package:tubes_android/view/screen/home_page.dart';
 import 'package:tubes_android/view/screen/login_page.dart';
 
 class RegisPage extends StatefulWidget {
@@ -29,7 +29,7 @@ class _RegisPageState extends State<RegisPage> {
     super.dispose();
   }
 
-// Validasi Nama Lengkap
+  // Validasi Nama Lengkap
   String? _validateFullname(String? value) {
     if (value == null || value.isEmpty) {
       return 'Nama lengkap tidak boleh kosong';
@@ -46,7 +46,7 @@ class _RegisPageState extends State<RegisPage> {
     return null;
   }
 
-// Validasi Nomor Telepon
+  // Validasi Nomor Telepon
   String? _validatePhoneNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Nomor telepon tidak boleh kosong';
@@ -57,7 +57,7 @@ class _RegisPageState extends State<RegisPage> {
     return null;
   }
 
-// Validasi Username
+  // Validasi Username
   String? _validateUsername(String? value) {
     if (value == null || value.isEmpty) {
       return 'Username tidak boleh kosong';
@@ -71,7 +71,7 @@ class _RegisPageState extends State<RegisPage> {
     return null;
   }
 
-// Validasi Password
+  // Validasi Password
   String? _validatePassword(String? value) {
     if (value == null || value.isEmpty) {
       return 'Password tidak boleh kosong';
@@ -82,6 +82,7 @@ class _RegisPageState extends State<RegisPage> {
     return null;
   }
 
+  // Fungsi untuk menangani pendaftaran
   void _handleRegister() async {
     if (_formKey.currentState!.validate()) {
       setState(() => isLoading = true);
@@ -100,7 +101,7 @@ class _RegisPageState extends State<RegisPage> {
         _showSnackbar(
             "Registrasi berhasil! Role: ${res?.role ?? 'Tidak ditemukan'}");
 
-        // Hapus data hanya jika registrasi berhasil
+        // Hapus data setelah registrasi berhasil
         _fullnameController.clear();
         _phonenumberController.clear();
         _usernameController.clear();
@@ -119,6 +120,7 @@ class _RegisPageState extends State<RegisPage> {
     }
   }
 
+  // Fungsi menampilkan Snackbar
   void _showSnackbar(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -186,11 +188,11 @@ class _RegisPageState extends State<RegisPage> {
                               ),
                             ),
                             const SizedBox(height: 20),
-                            _buildTextField("Full Name", Icons.near_me,
+                            _buildTextField("Full Name", Icons.person,
                                 _fullnameController, _validateFullname),
                             _buildTextField("Phone Number", Icons.phone,
                                 _phonenumberController, _validatePhoneNumber),
-                            _buildTextField("Username", Icons.person,
+                            _buildTextField("Username", Icons.account_circle,
                                 _usernameController, _validateUsername),
                             _buildTextField("Password", Icons.lock,
                                 _passwordController, _validatePassword,
@@ -224,11 +226,11 @@ class _RegisPageState extends State<RegisPage> {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const HomePage()),
+                                      builder: (context) => const LoginPage()),
                                 );
                               },
                               child: const Text(
-                                "Back to Home",
+                                "Already have an account? Login",
                                 style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
@@ -262,12 +264,12 @@ class _RegisPageState extends State<RegisPage> {
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: Colors.white70),
-          filled: true,
-          fillColor: Colors.white.withOpacity(0.2),
+          prefixIcon: Icon(icon, color: Colors.white70),
           border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide.none),
-          prefixIcon: Icon(icon, color: Colors.white70),
+          filled: true,
+          fillColor: Colors.white.withOpacity(0.2),
         ),
       ),
     );

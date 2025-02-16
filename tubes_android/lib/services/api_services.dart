@@ -1,4 +1,4 @@
-import 'dart:io';
+// import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 // import 'package:flutter/material.dart';
@@ -15,6 +15,10 @@ class ApiServices {
       headers: {"Content-Type": "application/json"},
     ),
   );
+
+  // final Dio dio = Dio();
+  // final String _baseUrl = 'https://bp-tubes-c48fa88ca6a5.herokuapp.com/api';
+
 
   Future<RegisResponse?> register(RegisInput user) async {
     try {
@@ -75,6 +79,8 @@ class ApiServices {
     return prefs.getString('token'); // Ambil token JWT dari local storage
   }
 
+// Fungsi untuk mendapatkan semua menu
+  // GET ALL MENUS
   Future<List<MenuModel>?> getAllMenus() async {
     try {
       final response = await _dio.get("/menu/");
@@ -83,14 +89,97 @@ class ApiServices {
         final List<dynamic> data = response.data["menus"];
         return data.map((menu) => MenuModel.fromJson(menu)).toList();
       } else {
+        print("Gagal mengambil data menu: ${response.statusCode}");
         return null;
       }
     } on DioException catch (e) {
-      print("Error fetching menus: ${e.message}");
+      print("Error fetching menus: ${e.response?.statusCode} - ${e.message}");
       return null;
     } catch (e) {
       print("Unexpected error: $e");
       return null;
+    }
+  }
+
+  // Fungsi untuk menambahkan menu
+  Future<MenuResponse?> postMenu(MenuInput menu) async {
+    try {
+      final response = await _dio.post(
+        "/menu/",
+        data: menu.toJson(),
+      );
+
+      return MenuResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return MenuResponse(
+          status: e.response?.statusCode ?? 500,
+          message: e.response?.data["error"] ?? "Gagal menambahkan menu",
+        );
+      }
+      return MenuResponse(status: 500, message: "Network error: ${e.message}");
+    } catch (e) {
+      return MenuResponse(status: 500, message: "Unexpected error: $e");
+    }
+  }
+
+  // Fungsi untuk mengubah menu
+  Future<MenuResponse?> putMenu(String menuId, MenuInput menu) async {
+    try {
+      final response = await _dio.put(
+        "/menu/$menuId",
+        data: menu.toJson(),
+      );
+
+      return MenuResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return MenuResponse(
+          status: e.response?.statusCode ?? 500,
+          message: e.response?.data["error"] ?? "Gagal memperbarui menu",
+        );
+      }
+      return MenuResponse(status: 500, message: "Network error: ${e.message}");
+    } catch (e) {
+      return MenuResponse(status: 500, message: "Unexpected error: $e");
+    }
+  }
+
+  // Fungsi untuk mengambil menu berdasarkan ID
+  Future<MenuResponse?> getMenuById(String menuId) async {
+    try {
+      final response = await _dio.get("/menu/$menuId");
+
+      return MenuResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return MenuResponse(
+          status: e.response?.statusCode ?? 500,
+          message: e.response?.data["error"] ?? "Gagal mengambil data menu",
+        );
+      }
+      return MenuResponse(status: 500, message: "Network error: ${e.message}");
+    } catch (e) {
+      return MenuResponse(status: 500, message: "Unexpected error: $e");
+    }
+  }
+
+  // Fungsi untuk menghapus menu
+  Future<MenuResponse?> deleteMenu(String menuId) async {
+    try {
+      final response = await _dio.delete("/menu/$menuId");
+
+      return MenuResponse.fromJson(response.data);
+    } on DioException catch (e) {
+      if (e.response != null) {
+        return MenuResponse(
+          status: e.response?.statusCode ?? 500,
+          message: e.response?.data["error"] ?? "Gagal menghapus menu",
+        );
+      }
+      return MenuResponse(status: 500, message: "Network error: ${e.message}");
+    } catch (e) {
+      return MenuResponse(status: 500, message: "Unexpected error: $e");
     }
   }
 

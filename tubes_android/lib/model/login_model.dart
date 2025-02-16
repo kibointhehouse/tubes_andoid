@@ -1,4 +1,4 @@
-// 📌 Model untuk Input Login
+// Model untuk Input Login
 class LoginInput {
   final String username;
   final String password;
@@ -11,7 +11,7 @@ class LoginInput {
       };
 }
 
-// 📌 Model untuk Response Login
+// Model untuk Response Login
 class LoginResponse {
   final String? token;
   final String? role;

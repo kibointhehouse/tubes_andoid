@@ -81,36 +81,50 @@ class ApiServices {
 // Fungsi untuk mendapatkan semua menu
   // GET ALL MENUS
   Future<List<MenuModel>?> getAllMenus() async {
-  try {
-    print("🔄 Fetching menu list from API...");
-    final response = await _dio.get("/menu/");
+    try {
+      print("🔄 Fetching menu list from API...");
+      final response = await _dio.get("/menu/");
 
-    print("📩 Response status code: ${response.statusCode}");
-    print("📩 Response body: ${response.data}");
+      print("📩 Response status code: ${response.statusCode}");
+      print("📩 Full response data: ${response.data}");
 
-    if (response.statusCode == 200) {
-      final List<dynamic> data = response.data["menus"];
-      print("✅ Data ditemukan: $data");
+      if (response.statusCode == 200) {
+        if (response.data.containsKey("menus") &&
+            response.data["menus"] is List) {
+          final List<dynamic> data = response.data["menus"];
+          print("✅ Data ditemukan: $data");
 
-      return data.map((menu) => MenuModel.fromJson(menu)).toList();
-    } else {
-      print("❌ Gagal mengambil data menu: ${response.statusCode}");
+          List<MenuModel> menuList =
+              data.map((menu) => MenuModel.fromJson(menu)).toList();
+
+          // Debug: Print setiap item yang berhasil diparse
+          for (var menu in menuList) {
+            print("🍽 Parsed Menu: ${menu.toString()}");
+          }
+
+          return menuList;
+        } else {
+          print(
+              "⚠ Response tidak memiliki key 'menus' atau bukan List: ${response.data}");
+          return [];
+        }
+      } else {
+        print("❌ Gagal mengambil data menu: ${response.statusCode}");
+        return null;
+      }
+    } on DioException catch (e) {
+      print("❌ Error fetching menus: ${e.response?.statusCode} - ${e.message}");
+      return null;
+    } catch (e) {
+      print("❌ Unexpected error: $e");
       return null;
     }
-  } on DioException catch (e) {
-    print("❌ Error fetching menus: ${e.response?.statusCode} - ${e.message}");
-    return null;
-  } catch (e) {
-    print("❌ Unexpected error: $e");
-    return null;
   }
-}
-
 
   // Fungsi untuk menambahkan menu
   Future<MenuResponse?> postMenu(MenuInput menu) async {
     try {
-      // DEBUG: Lihat data yang dikirim ke server
+      // ✅ DEBUG: Lihat data yang dikirim ke server
       print("JSON yang dikirim: ${menu.toJson()}");
 
       final response = await _dio.post(
@@ -161,11 +175,22 @@ class ApiServices {
     try {
       final response = await _dio.get("/menu/$menuId");
 
-      return MenuModel.fromJson(response.data); // Ubah jadi MenuModel
+      print("📩 Response dari API saat ambil menu by ID: ${response.data}");
+
+      if (response.statusCode == 200 && response.data != null) {
+        final menuData = response.data["menu"];
+        if (menuData is Map<String, dynamic>) {
+          return MenuModel.fromJson(menuData);
+        } else {
+          print("❌ Data menu tidak ditemukan dalam respons API.");
+        }
+      } else {
+        print("❌ API tidak mengembalikan data yang benar.");
+      }
     } on DioException catch (e) {
-      print("Error: ${e.response?.data}");
-      return null;
+      print("❌ Error: ${e.response?.data}");
     }
+    return null; // Kembalikan null jika gagal
   }
 
   // Fungsi untuk menghapus menu

@@ -2,7 +2,6 @@
 class MenuModel {
   final String id;
   final String menuName;
-  // final String image;
   final double price;
   final String description;
   final int stock;
@@ -11,7 +10,6 @@ class MenuModel {
   MenuModel({
     required this.id,
     required this.menuName,
-    // required this.image,
     required this.price,
     required this.description,
     required this.stock,
@@ -20,19 +18,19 @@ class MenuModel {
 
   // Parsing dari JSON
   factory MenuModel.fromJson(Map<String, dynamic> json) {
-    print("JSON yang diterima: $json"); // Debugging
+    print("📩 Parsing JSON Menu: $json"); // Debugging
 
     return MenuModel(
-      id: json["_id"] ?? "",
-      menuName: json["menu_name"] ?? "Unknown",
+      id: json["_id"]?.toString() ?? "", // Pastikan ID tidak null
+      menuName: json["menu_name"]?.toString() ?? "Unknown",
       price: (json["price"] is num)
           ? (json["price"] as num).toDouble()
           : double.tryParse(json["price"].toString()) ?? 0.0,
-      description: json["description"] ?? "No description",
+      description: json["description"]?.toString() ?? "No description",
       stock: (json["stock"] is num)
           ? (json["stock"] as num).toInt()
           : int.tryParse(json["stock"].toString()) ?? 0,
-      menuCategories: json["menu_categories"] ?? "Uncategorized",
+      menuCategories: json["menu_categories"]?.toString() ?? "Uncategorized",
     );
   }
 
@@ -41,12 +39,17 @@ class MenuModel {
     return {
       "_id": id,
       "menu_name": menuName,
-      // "image": image,
       "price": price,
       "description": description,
       "stock": stock,
       "menu_categories": menuCategories,
     };
+  }
+
+  // Override toString untuk memberikan representasi yang lebih jelas
+  @override
+  String toString() {
+    return 'MenuModel(id: $id, menuName: $menuName, price: $price, description: $description, stock: $stock, menuCategories: $menuCategories)';
   }
 }
 
@@ -69,7 +72,6 @@ class MenuListResponse {
 // DIGUNAKAN UNTUK FORM INPUT
 class MenuInput {
   final String menuName;
-  // final String image;
   final String price;
   final String description;
   final String stock;
@@ -77,7 +79,6 @@ class MenuInput {
 
   MenuInput({
     required this.menuName,
-    // required this.image,
     required this.price,
     required this.description,
     required this.stock,
@@ -87,9 +88,9 @@ class MenuInput {
   Map<String, dynamic> toJson() {
     return {
       "menu_name": menuName,
-      "price": double.tryParse(price) ?? 0.0, // KONVERSI ke double
+      "price": double.tryParse(price) ?? 0.0, // ✅ KONVERSI ke double
       "description": description,
-      "stock": int.tryParse(stock) ?? 0, // KONVERSI ke int
+      "stock": int.tryParse(stock) ?? 0, // ✅ KONVERSI ke int
       "menu_categories": menuCategories,
     };
   }

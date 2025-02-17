@@ -9,7 +9,9 @@ class About extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('About'),
+        title:
+            const Text('About', style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
@@ -23,28 +25,29 @@ class About extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Gambar Header
+            // Gambar Header dengan efek full
             Stack(
               children: [
                 Container(
                   width: double.infinity,
-                  height: 200,
+                  height: 250,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage("assets/images/restaurant.jpeg"),
-                      fit: BoxFit.cover,
+                      image: NetworkImage(
+                          'https://arsitagx-master-article.s3.ap-southeast-1.amazonaws.com/article-photo/807/desain-restoran-kontemporer-5.jpg'),
+                      fit: BoxFit.cover, // Full image, tanpa terpotong
                     ),
                   ),
                 ),
                 Container(
                   width: double.infinity,
-                  height: 200,
+                  height: 250,
                   color: Colors.black.withOpacity(0.3),
                   alignment: Alignment.center,
                   child: const Text(
                     "Aplikasi Manajemen Restoran",
                     style: TextStyle(
-                      fontSize: 26,
+                      fontSize: 28,
                       fontWeight: FontWeight.bold,
                       color: Colors.white,
                     ),
@@ -61,7 +64,7 @@ class About extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
-                elevation: 5,
+                elevation: 8,
                 child: Padding(
                   padding: const EdgeInsets.all(16.0),
                   child: Column(
@@ -77,7 +80,7 @@ class About extends StatelessWidget {
                       ),
                       const SizedBox(height: 10),
                       const Text(
-                        "Aplikasi ini membantu pemilik restoran dalam mengelola menu, pesanan, dan stok dengan lebih efisien. "
+                        "Aplikasi Manajemen Menu Restoran mempermudah pengelolaan menu dengan fitur tambah, edit, hapus, dan tampilan daftar menu secara digital, sehingga lebih efisien, akurat, dan fleksibel bagi pengelola restoran."
                         "Dengan fitur yang mudah digunakan, restoran dapat meningkatkan produktivitas dan pelayanan kepada pelanggan.",
                         style: TextStyle(fontSize: 16),
                         textAlign: TextAlign.justify,
@@ -114,41 +117,56 @@ class About extends StatelessWidget {
     );
   }
 
-  // Widget untuk Card Fitur
+  // Widget untuk Card Fitur dengan animasi hover
   Widget _buildFeatureCard(
       {required IconData icon,
       required String title,
       required String description}) {
-    return Card(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      elevation: 3,
-      margin: const EdgeInsets.only(bottom: 12),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          children: [
-            Icon(icon, size: 40, color: Colors.deepPurple),
-            const SizedBox(width: 15),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black12,
+            spreadRadius: 2,
+            blurRadius: 6,
+          ),
+        ],
+      ),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        elevation: 3,
+        margin: const EdgeInsets.only(bottom: 12),
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Icon(icon, size: 40, color: Colors.deepPurple),
+              const SizedBox(width: 15),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 5),
-                  Text(
-                    description,
-                    style: const TextStyle(fontSize: 14, color: Colors.black54),
-                  ),
-                ],
+                    const SizedBox(height: 5),
+                    Text(
+                      description,
+                      style:
+                          const TextStyle(fontSize: 14, color: Colors.black54),
+                    ),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

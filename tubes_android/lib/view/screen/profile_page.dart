@@ -10,15 +10,12 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile',
-            style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Profile', style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
-        backgroundColor: Colors.blueAccent,
+        // backgroundColor: Colors.blueAccent,
         actions: [
           IconButton(
-            onPressed: () {
-              _showLogoutConfirmationDialog(context);
-            },
+            onPressed: () => _showLogoutConfirmationDialog(context),
             icon: const Icon(Icons.logout, color: Colors.white),
           ),
         ],
@@ -46,14 +43,14 @@ class Profile extends StatelessWidget {
                 ),
               ],
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            child: Column(
               children: const [
                 _ProfileCard(
                   name: 'Kresnanda Randyansyah',
                   npm: '714220052',
                   icon: Icons.person,
                 ),
+                SizedBox(height: 20),
                 _ProfileCard(
                   name: 'Ghaida Fasya',
                   npm: '714220031',
@@ -94,37 +91,42 @@ class _ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CircleAvatar(
-          radius: 50,
-          backgroundColor: Colors.white,
-          child: Icon(icon, size: 50, color: Colors.blueAccent),
+    return Card(
+      elevation: 5,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: Row(
+          children: [
+            CircleAvatar(
+              radius: 40,
+              backgroundColor: Colors.blueAccent,
+              child: Icon(icon, size: 40, color: Colors.white),
+            ),
+            const SizedBox(width: 20),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  name,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'D4 Teknik Informatika',
+                  style: const TextStyle(fontSize: 16, color: Colors.black54),
+                ),
+                Text(
+                  'NPM $npm',
+                  style: const TextStyle(fontSize: 14, color: Colors.black45),
+                ),
+              ],
+            ),
+          ],
         ),
-        const SizedBox(height: 10),
-        Text(
-          name,
-          style: const TextStyle(
-            fontSize: 22,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
-          ),
-        ),
-        Text(
-          'D4 Teknik Informatika',
-          style: const TextStyle(
-            fontSize: 16,
-            color: Colors.white70,
-          ),
-        ),
-        Text(
-          'NPM $npm',
-          style: const TextStyle(
-            fontSize: 14,
-            color: Colors.white70,
-          ),
-        ),
-      ],
+      ),
     );
   }
 }
@@ -154,9 +156,7 @@ void _showLogoutConfirmationDialog(BuildContext context) {
         content: const Text('Anda yakin ingin logout?'),
         actions: <Widget>[
           TextButton(
-            onPressed: () {
-              Navigator.of(dialogContext).pop();
-            },
+            onPressed: () => Navigator.of(dialogContext).pop(),
             child: const Text('Tidak'),
           ),
           TextButton(

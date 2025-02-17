@@ -28,6 +28,8 @@ class _MenuPageState extends State<MenuPage> {
   MenuResponse? ctRes;
   bool isEdit = false;
   String idMenu = '';
+  final List<String> _categoryList = ['Makanan', 'Minuman'];
+// Define your categories here
 
   late SharedPreferences loginData;
   String username = '';
@@ -185,14 +187,16 @@ class _MenuPageState extends State<MenuPage> {
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
-                value: _selectedCategory,
+                value: _categoryList.contains(_selectedCategory)
+                    ? _selectedCategory
+                    : null,
                 validator: (value) =>
                     value == null ? 'Please select a category' : null,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   labelText: 'Category',
                 ),
-                items: ['Makanan', 'Minuman']
+                items: _categoryList
                     .map((category) => DropdownMenuItem(
                           value: category,
                           child: Text(category),
@@ -201,6 +205,8 @@ class _MenuPageState extends State<MenuPage> {
                 onChanged: (value) {
                   setState(() {
                     _selectedCategory = value;
+                    print(
+                        "🟢 Kategori dipilih setelah update: $_selectedCategory");
                   });
                 },
               ),
@@ -317,8 +323,9 @@ class _MenuPageState extends State<MenuPage> {
                 ),
               ),
               const SizedBox(height: 8.0),
-              const SizedBox(
-                height: 20,
+              SizedBox(
+                height: 400,
+                child: _buildListMenu(),
               ),
             ],
           ),
@@ -329,7 +336,8 @@ class _MenuPageState extends State<MenuPage> {
 
 // untuk menampilkan list menu
   Widget _buildListMenu() {
-    print("Jumlah data dalam _menuMdl: ${_menuMdl.length}"); // Debugging output
+    print(
+        "📢 Menampilkan list menu. Jumlah item: ${_menuMdl.length}"); // Debugging output
     if (_menuMdl.isEmpty) {
       return const Center(
         child: Text("Tidak ada menu tersedia"),
@@ -346,7 +354,7 @@ class _MenuPageState extends State<MenuPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Rp ${ctList.price.toStringAsFixed(2)}", // ✅ Perbaikan: Format harga dengan 2 desimal
+                  "Rp ${ctList.price.toStringAsFixed(2)}", // Perbaikan: Format harga dengan 2 desimal
                   style: const TextStyle(color: Colors.green),
                 ),
                 Text(
@@ -354,7 +362,7 @@ class _MenuPageState extends State<MenuPage> {
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
                 Text(
-                  "Stock: ${ctList.stock}", // ✅ Perbaikan: Pastikan stock ditampilkan sebagai string
+                  "Stock: ${ctList.stock}", // Perbaikan: Pastikan stock ditampilkan sebagai string
                 ),
               ],
             ),
@@ -365,19 +373,31 @@ class _MenuPageState extends State<MenuPage> {
                   onPressed: () async {
                     final menu = await _dataService.getMenuById(ctList.id);
 
-                    // ✅ Perbaikan: Pastikan menu tidak null dan bertipe MenuModel
-                    if (menu != null && menu is MenuModel) {
+                    if (menu != null) {
+                      print("Data yang diterima saat edit: ${menu.toJson()}");
+
                       setState(() {
                         _nameCtl.text = menu.menuName;
-                        _priceCtl.text = menu.price
-                            .toString(); // ✅ Perbaikan: Konversi price ke String
+                        _priceCtl.text =
+                            menu.price.toString(); // Konversi harga ke string
                         _descCtl.text = menu.description;
-                        _stockCtl.text = menu.stock
-                            .toString(); // ✅ Perbaikan: Konversi stock ke String
-                        _selectedCategory = menu.menuCategories;
+                        _stockCtl.text =
+                            menu.stock.toString(); // Konversi stok ke string
+
+                        // Pastikan kategori yang dipilih sesuai dengan kategori menu yang diterima
+                        _selectedCategory =
+                            _categoryList.contains(menu.menuCategories)
+                                ? menu.menuCategories
+                                : null;
+
+                        print(
+                            "✏ Mengedit menu: ${menu.menuName}, Kategori: $_selectedCategory");
+
                         isEdit = true;
                         idMenu = menu.id;
                       });
+                    } else {
+                      print("❌ Data menu kosong atau tidak valid!");
                     }
                   },
                   icon: const Icon(Icons.edit, color: Colors.blue),
@@ -461,6 +481,11 @@ class _MenuPageState extends State<MenuPage> {
         _menuMdl.addAll(users);
         print(
             "✅ Data berhasil dimasukkan ke _menuMdl, total: ${_menuMdl.length}");
+        // Debug kategori yang diterima
+        for (var menu in users) {
+          print(
+              "🔍 Menu: ${menu.menuName}, Kategori: '${menu.menuCategories}'");
+        }
       } else {
         print("❌ Tidak ada data menu yang masuk ke _menuMdl!");
       }

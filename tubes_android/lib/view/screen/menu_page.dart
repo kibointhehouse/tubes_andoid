@@ -122,6 +122,7 @@ class _MenuPageState extends State<MenuPage> {
             icon: const Icon(Icons.logout),
           ),
         ],
+          backgroundColor: const Color.fromARGB(255, 81, 1, 185),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
@@ -206,7 +207,7 @@ class _MenuPageState extends State<MenuPage> {
                   setState(() {
                     _selectedCategory = value;
                     print(
-                        "🟢 Kategori dipilih setelah update: $_selectedCategory");
+                        "Kategori dipilih setelah update: $_selectedCategory");
                   });
                 },
               ),
@@ -264,7 +265,7 @@ class _MenuPageState extends State<MenuPage> {
                           // _image = null;
                           await refreshMenuList();
                         },
-                        child: Text(isEdit ? 'UPDATE' : 'POST'),
+                        child: Text(isEdit ? 'EDIT' : 'SUBMIT'),
                       ),
                       if (isEdit)
                         ElevatedButton(
@@ -283,7 +284,7 @@ class _MenuPageState extends State<MenuPage> {
                               isEdit = false;
                             });
                           },
-                          child: const Text('Cancel Update'),
+                          child: const Text('Cancel Edit'),
                         ),
                     ],
                   )

@@ -20,7 +20,7 @@ class About extends StatelessWidget {
             icon: const Icon(Icons.logout),
           ),
         ],
-        // backgroundColor: Colors.deepPurple,
+        backgroundColor: const Color.fromARGB(255, 81, 1, 185),
       ),
       body: SingleChildScrollView(
         child: Column(

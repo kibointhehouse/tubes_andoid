@@ -10,9 +10,10 @@ class Profile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Profile', style: TextStyle(fontWeight: FontWeight.bold)),
+        title: const Text('Profile',
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
-        // backgroundColor: Colors.blueAccent,
+        backgroundColor: const Color.fromARGB(255, 81, 1, 185),
         actions: [
           IconButton(
             onPressed: () => _showLogoutConfirmationDialog(context),
@@ -26,7 +27,10 @@ class Profile extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Colors.blueAccent, Colors.lightBlue],
+                colors: [
+                  Color.fromARGB(255, 81, 1, 185),
+                  Color.fromARGB(255, 122, 4, 224)
+                ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -100,7 +104,7 @@ class _ProfileCard extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 40,
-              backgroundColor: Colors.blueAccent,
+              backgroundColor: const Color.fromARGB(255, 81, 1, 185),
               child: Icon(icon, size: 40, color: Colors.white),
             ),
             const SizedBox(width: 20),

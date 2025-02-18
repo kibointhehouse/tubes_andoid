@@ -365,6 +365,10 @@ class _MenuPageState extends State<MenuPage> {
                   style: const TextStyle(fontStyle: FontStyle.italic),
                 ),
                 Text(
+                  ctList.description,
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+                Text(
                   "Stock: ${ctList.stock}", // Perbaikan: Pastikan stock ditampilkan sebagai string
                 ),
               ],

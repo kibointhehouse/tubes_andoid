@@ -113,7 +113,9 @@ class _MenuPageState extends State<MenuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Manage Menu'),
+        title: const Text('Manage Menu',
+            style: TextStyle(fontWeight: FontWeight.bold)),
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
@@ -122,7 +124,7 @@ class _MenuPageState extends State<MenuPage> {
             icon: const Icon(Icons.logout),
           ),
         ],
-          backgroundColor: const Color.fromARGB(255, 81, 1, 185),
+        backgroundColor: const Color.fromARGB(255, 81, 1, 185),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),

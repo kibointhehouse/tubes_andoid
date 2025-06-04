@@ -49,7 +49,7 @@ class _BottomNavBar extends State<DynamicBottomNavBar> {
             label: 'Profile', // Label profile
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.album_outlined), // Ikon
+            icon: Icon(Icons.info_outline), // Ikon
             label: 'About', // Label Kelola Data
           ),
         ],

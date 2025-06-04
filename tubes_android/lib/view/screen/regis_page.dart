@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_android/model/regis_model.dart';
 import 'package:tubes_android/services/api_services.dart';
+import 'package:tubes_android/view/screen/home_page.dart';
 // import 'package:tubes_android/view/screen/home_page.dart';
 import 'package:tubes_android/view/screen/login_page.dart';
 
@@ -221,20 +222,55 @@ class _RegisPageState extends State<RegisPage> {
                                     ),
                                   ),
                             const SizedBox(height: 16),
+
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                              const Text(
+                                "Don't have an account yet?",
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => const LoginPage(),
+                                    ),
+                                  );
+                                },
+                                child: const Text(
+                                  "Sign in here.",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFFFFD700), // Warna emas
+                                  ),
+                                ),
+                              ),
+                              ],
+                            ),
+                            // Tombol "Back to Home"
                             TextButton(
                               onPressed: () {
                                 Navigator.pushReplacement(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) => const LoginPage()),
+                                    builder: (context) => const HomePage(),
+                                  ),
                                 );
                               },
                               child: const Text(
-                                "Already have an account? Login",
+                                "Back to Home",
                                 style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  decoration: TextDecoration.underline,
+                                ),
                               ),
                             ),
                           ],

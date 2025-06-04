@@ -1,5 +1,4 @@
 import 'package:tubes_android/view/screen/home_page.dart';
-// import 'package:tubes_android/view/screen/login_page.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -12,7 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Aplikasi Manajemen Menu',
+      title: 'Aplikasi Manajemen Menu Restoran',
       theme: ThemeData(
         primarySwatch: Colors.indigo,
         useMaterial3: false,
